@@ -53,7 +53,7 @@
                                     As described below, the project succeeded on both goals.</p>
                                     
       <p style="text-align:justify">The main barrier to supporting modern Linux releases is with how it reuses the GNU C library (glibc).  
-                                    Historically, DCE was able to reuse the existing system-provided glibc by makes use of a technique known as vtable mangling which allows DCE to hijack 
+                                    Historically, DCE was able to reuse the existing system-provided glibc by making use of a technique known as vtable mangling which allows DCE to hijack 
                                     system calls, such as all stdio calls to a FILE stream, But, in later libc releases, security checks have been introduced
                                     on this as well as on loading position-independent-executables (<i>PIE</i>), which is how DCE loads userspace applications like iperf,httpd, etc.
                                     into it's own address space, and executes it on top of (Linux/ns-3)'s network stack, based on script configurations. The Linux Kernel stack had 
