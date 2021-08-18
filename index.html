@@ -41,32 +41,41 @@
       </div> 
       <h5><font color="vintage">Project Overview</font></h5>
       <p style="text-align:justify">During GSoC 2021, I worked on upgrading DCE (<i>Direct Code Execution</i>), which is a project under the ns-3 umbrella. 
-                                    It fascilitates the execution of real applications on top of the discrete time simulator, ns-3. It supports a wide range of
-                                    applications, from as simple as the httpd server to complex networks on top of real server-client networking applications.
-                                    DCE makes use of a technique known as vtable mangling which allows DCE to hijack all stdio calls to a FILE stream, 
-                                    making it easiliy moderate and emulate a variety of I/O streams. But, in later libc releases, security checks were introduced
-                                    on this as well as on loading position-indepent-executbles (<i>PIE</i>), which is how DCE loads userspace applications like iperf,httpd, etc.
-                                    into it's own address space, and execute it on top of (Linux/ns-3)'s network stack, based on script configurations. Also, the Linux Kernel
-                                    currenty in use uses base release as Linux-4.4.0, which doesn't satisfy the current network research needs. The Linux Kernel stack had to be 
-                                    be upgraded as well to a Linux release 5.10 or above. The existing Python bindings generation and compilation code was also outdated and 
-                                    wasn't aligned with newer code changes and had hard coded binding type/class lookup, reducing flexibility</p>
+                                    DCE provides a special capability to the ns-3 network simulator-- while most implementations of protocols in ns-3 are written 
+                                    specifically for the simulation environment (often with abstractions to simplify some details), DCE allows actual implementations 
+                                    of C/C++ applications (and Linux kernel code) to be directly used in the simulation context.  This can help to better align 
+                                    simulations with real-world experiments, and can save the ns-3 user from having to rewrite some protocol implementations specifically for ns-3.
+                                    It supports a wide range of applications, from as simple as the httpd server to complex networks on top of real server-client networking applications.
+                                    However, DCE was largely developed five to ten years ago, and the original maintainers have largely become inactive.  As a result, DCE code has 
+                                    atrophied for the past few years, making it harder and harder to use as operating systems, compilers, and Python distributions evolved.  
+                                    At the start of the project, DCE was barely working on an end-of-life Ubuntu distribution (Ubuntu 16.04) and with a Linux kernel version (4.4) released in 2016.  
+                                    Therefore, the goal of this DCE project was to make it work for the most recent Ubuntu LTS release (20.04) and to support a more modern Linux kernel version.  
+                                    As described below, the project succeeded on both goals.</p>
+                                    
+      <p style="text-align:justify">The main barrier to supporting modern Linux releases is with how it reuses the GNU C library (glibc).  
+                                    Historically, DCE was able to reuse the existing system-provided glibc by makes use of a technique known as vtable mangling which allows DCE to hijack 
+                                    system calls, such as all stdio calls to a FILE stream, But, in later libc releases, security checks have been introduced
+                                    on this as well as on loading position-independent-executables (<i>PIE</i>), which is how DCE loads userspace applications like iperf,httpd, etc.
+                                    into it's own address space, and executes it on top of (Linux/ns-3)'s network stack, based on script configurations. The Linux Kernel stack had 
+                                    to be upgraded as well to a Linux release 5.10 or above. The existing Python bindings generation and compilation code was also outdated and 
+                                    wasn't aligned with newer code changes, or with Python 3 and had hard coded binding type/class lookup, reducing flexibility</p>
 
-      <p style="text-align:justify">I worked on developing a custom Glibc based Ubuntu-20.04 build and also aligned the Bake build system to it, to avoid any changes to 
-                                    the build steps. The custom glibc is built by cloning the libc-2.31 source andd patching it to disable all security checks which 
-                                    cause trouble to DCE, and all this is completelty automated through Bake. The new glibc built, is of the same version as the system 
+      <p style="text-align:justify">I worked on developing a custom Glibc based Ubuntu-20.04 build and also aligned the Bake build system to use it, to avoid any changes to 
+                                    the build steps. The custom glibc is built by cloning the libc-2.31 source and patching it to disable the security checks which 
+                                    cause trouble to DCE, in a manner that is completelty automated through Bake. The new glibc built, is of the same version as the system 
                                     libc, assuring no load-time symbol lookup errors. The Python Bindings support in DCE was also outdated and required an upgrade. I 
                                     re-implemented the Python bindings compilation code and also the Python API scanning code. I also patched the cpython lookup order 
                                     to fix library-not-found errors.</p>
         
-      <p style="text-align:justify">The current DCE implementation uses a Linux-4.4.0 based net-next-nuse-4.4.0 Linux Library. I developed a Linux library export for
+      <p style="text-align:justify">The current DCE implementation uses a Linux-4.4.0 based net-next-nuse-4.4.0 Linux library. I developed a Linux library export for
                                     net-next-nuse-5.10 using Linux-5.10.47 LTS kernel as the base tag. I managed to get userspace network applications like iperf, netperf
                                     httpd, etc, to work on DCE on top of Linux-5.10. I could also get ethtool to work on top of it, and tested device statistics generation
                                     and some RX/TX device configurational operations. ethtool is still a work in progress. I also patched and fixed issues with the sysctl Setup,
-                                    PID namespace, task struct lookups in kernel initialization phase. I also patched kernel components like the kernel LSM (Linux Security Module),
-                                    ucounts kernel API, and VFS mount etc. I also tested and prototyped why the previous stratergy to use LKL (Linux Kernel Library) fails due to task scheduler issues. 
-                                    I also made a post regarding the same on the developer lists.</p>
+                                    PID namespace, task_struct lookups in kernel initialization phase. I also patched kernel components like the kernel LSM (Linux Security Module),
+                                    ucounts kernel API, and VFS mount etc. I also tested and prototyped why the previous stratergy to use LKL (Linux Kernel Library) fails due to task scheduler issues,
+                                    as well as limitation imposed by it's uniprocessor architecture, cpu locks and semaphore usage. I summarized my progress regarding the same on the developer lists.</p>
 
-    <p style="text-align:justify">Please do checkout my design documentation that I maintained during the GSoC program !</p> 
+    <p style="text-align:justify">Please read through my design documentation that I maintained during the GSoC program !</p> 
     <div class="row center">        
         <a href="https://docs.google.com/document/d/1o3xsukgDN9e4-q8n6KbLDX2c9fTxKIhRhimDsn4ivr8/edit?usp=sharing" target="_blank" id="download-button" class="btn-large waves-effect waves-light blue darken-1">Design Document</a>                
     </div>
@@ -74,7 +83,7 @@
       <p style="text-align:justify">This project was split into three phases. Please find the deliverable code written in each of the three phases. 
                                     All of the below are submitted as merge requests and some of them have already been merged. The remaining are currently 
                                     being reviewed by mentors and project maintainers. Apart from the ones below, details about other bug fixes, code reviews and 
-                                    testing in which I was involed can be found <a href="#Extras">here</a></p>
+                                    testing in which I was involved can be found <a href="#Extras">here</a></p>
 
     </div>
   </div>
@@ -184,7 +193,7 @@
         <h5><font color="vintage">Collaborations and Efforts</font></h5>
         <p style="text-align:justify">Apart from the deliverable code that I produced, I also did the following on the side during the program :</p>
         <ol>
-            <li>Debugged <b>LKL : The Linux Kernel Library Process</b> scheduler issues and defined technical limitations and details about why 
+            <li>Debugged <b>LKL : The Linux Kernel Library</b> Process scheduler, CPU locks and semaphore issues and defined technical limitations and details about why 
                 LKL was not a good choice at the moment to be integrated with DCE as it's Linux Stack. </li>
             <li>Opened a <a href="https://www.freelists.org/post/linux-kernel-library/LKL-Integration-into-DCE"><u>Thread</u></font></a> on the <b>LKL developer lists</b>, 
                 with a summary of what is holding us back from using LKL in DCE. </li>
