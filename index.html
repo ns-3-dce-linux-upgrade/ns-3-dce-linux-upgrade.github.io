@@ -46,7 +46,7 @@
                                     of C/C++ applications (and Linux kernel code) to be directly used in the simulation context.  This can help to better align 
                                     simulations with real-world experiments, and can save the ns-3 user from having to rewrite some protocol implementations specifically for ns-3.
                                     It supports a wide range of applications, from as simple as the httpd server to complex networks on top of real server-client networking applications.
-                                    However, DCE was largely developed five to ten years ago, and the original maintainers have largely become inactive.  As a result, DCE code has 
+                                    However, DCE was largely developed five to ten years ago, and the original maintainers have not been able to devote as much time recently.  As a result, DCE code has 
                                     atrophied for the past few years, making it harder and harder to use as operating systems, compilers, and Python distributions evolved.  
                                     At the start of the project, DCE was barely working on an end-of-life Ubuntu distribution (Ubuntu 16.04) and with a Linux kernel version (4.4) released in 2016.  
                                     Therefore, the goal of this DCE project was to make it work for the most recent Ubuntu LTS release (20.04) and to support a more modern Linux kernel version.  
@@ -56,7 +56,7 @@
                                     Historically, DCE was able to reuse the existing system-provided glibc by making use of a technique known as vtable mangling which allows DCE to hijack 
                                     system calls, such as all stdio calls to a FILE stream, But, in later libc releases, security checks have been introduced
                                     on this as well as on loading position-independent-executables (<i>PIE</i>), which is how DCE loads userspace applications like iperf,httpd, etc.
-                                    into it's own address space, and executes it on top of (Linux/ns-3)'s network stack, based on script configurations. The Linux Kernel stack had 
+                                    into it's own address space, and executes it on top of (Linux/ns-3)'s network stack, based on script configurations. The Linux kernel stack had 
                                     to be upgraded as well to a Linux release 5.10 or above. The existing Python bindings generation and compilation code was also outdated and 
                                     wasn't aligned with newer code changes, or with Python 3 and had hard coded binding type/class lookup, reducing flexibility</p>
 
@@ -83,7 +83,7 @@
       <p style="text-align:justify">This project was split into three phases. Please find the deliverable code written in each of the three phases. 
                                     All of the below are submitted as merge requests and some of them have already been merged. The remaining are currently 
                                     being reviewed by mentors and project maintainers. Apart from the ones below, details about other bug fixes, code reviews and 
-                                    testing in which I was involved can be found <a href="#Extras">here</a></p>
+                                    testing in which I was involved during GSoC 2021 can be found <a href="#Extras">here</a></p>
 
     </div>
   </div>
@@ -151,7 +151,7 @@
                                                         Implemented the --apiscan feature for DCE, which is unimodular in nature and compiles to a standalone project 
                                                         with dependencies on ns-3 libraries as a whole, as compared to ns-3 which is a 
                                                         combination of multiple modules having individually defined dependencies.<br>
-                                                        The processes uses a combination of PyBindGen and gccxml</p>
+                                                        The processes uses a combination of PyBindGen and castXML</p>
         </div>
         <div class="col s4 center">              
             <p class="light" style="text-align:center">Fixed the failing CircleCI used in ns-3-dce.<br>
@@ -190,21 +190,29 @@
     </div>
 
     <div class="section" id="Extras">
+      <h5><font color="vintage">Patches</font></h5>
+      <p style="text-align:justify">Please find below the Google Drive shared folder which consists of all the patches generated throughout the GSoC 2021 program :</p>
+      <div class="center">        
+        <a href="https://drive.google.com/drive/folders/14TqHnrIY9T7gizFXBl5wshW4uD7PRnex?usp=sharing" class="waves-effect waves-light btn-large blue darken-1"  target="_blank" ><i class="material-icons left">cloud</i>Google Drive (All Patches)</a>
+
+      </div>
+    </div>
+
+    <div class="section" id="Extras">
         <h5><font color="vintage">Collaborations and Efforts</font></h5>
         <p style="text-align:justify">Apart from the deliverable code that I produced, I also did the following on the side during the program :</p>
         <ol>
-            <li>Debugged <b>LKL : The Linux Kernel Library</b> Process scheduler, CPU locks and semaphore issues and defined technical limitations and details about why 
-                LKL was not a good choice at the moment to be integrated with DCE as it's Linux Stack. </li>
-            <li>Opened a <a href="https://www.freelists.org/post/linux-kernel-library/LKL-Integration-into-DCE"><u>Thread</u></font></a> on the <b>LKL developer lists</b>, 
+            <li>Debugged the <b>Linux Kernel Library (LKL)</b> : Investigated the process scheduler, CPU locks and semaphore issues, and defined technical limitations and details about why 
+                LKL was not a good choice at the moment to be integrated with DCE as it's Linux stack. </li>
+            <li>Opened a <a href="https://www.freelists.org/post/linux-kernel-library/LKL-Integration-into-DCE"><u>thread</u></font></a> on the <b>LKL developer lists</b>, 
                 with a summary of what is holding us back from using LKL in DCE. </li>
             <li>Prepared a <b>prototype</b> on top of LKL, to demonstrate where it failed. <a href="https://github.com/ParthPratim/linux/tree/dce-b2"><u>Code</u></a></li>
             <li>Attempted to resolve a couple of issues on the <b>ns-3 official Google Group</b></li>
-            <li>Commit for adding <i>configure_arguments</i> attribute usage in <i>depends_on</i> tag itself.
-            <li>The above commit was <b>Merged</b> in the Bake Repo. <a href="https://gitlab.com/nsnam/bake/-/commit/041372d9e4ee18383206ec4234f3b6656b3b7aa0"><u>Bake Commit</u></a></li>
-            <li>Also fixed some library dependency lookups for Bake </li>
-            <li><b>Learnt</b> some really great debugging skills from Tom Sir while Sir resolved the bug in <i>dce-umip-nemo.cc</i></li>
-            <li>Collaborated with Tom Sir on resolving a <a href="https://github.com/direct-code-execution/ns-3-dce/issues/122"><u>bug</u></a> with LTE scripts reported by a user.</li>
-            <li>Implemented (testing is yet to be done) <b>ethtool</b> on top of Linux-5.10.47 ported kernel library, to fascilitate netdevice statistics and user-defined device configurations. <a href="https://github.com/ParthPratim/ns-3-dce/tree/linux-5.10.47-ethtool"><u>Code</u></a></li>
+            <li>Commit for adding <i>configure_arguments</i> attribute usage in <i>depends_on</i> tag itself, and fixing dependency lookups in Bake. 
+              The commits were <b>Merged</b> in the Bake Repo. <a href="https://gitlab.com/nsnam/bake/-/commit/041372d9e4ee18383206ec4234f3b6656b3b7aa0"><u>Bake Commit</u></a>            
+            <li><b>Learnt</b> some really great debugging skills while my mentor resolved the bug in <i>dce-umip-nemo.cc</i></li>
+            <li>Collaborated with my mentor on resolving a <a href="https://github.com/direct-code-execution/ns-3-dce/issues/122"><u>bug</u></a> with LTE scripts reported by a user.</li>
+            <li>Implemented (testing is yet to be done) <b>ethtool</b> on top of Linux-5.10.47 ported kernel library, to facilitate netdevice statistics and user-defined device configurations. <a href="https://github.com/ParthPratim/ns-3-dce/tree/linux-5.10.47-ethtool"><u>Code</u></a></li>
             <li><b>Debugged</b> the <i>dce-iperf.cc</i> script, and documented technical reasons and point of failure in the code. <a href="https://github.com/direct-code-execution/ns-3-dce/issues/125#issuecomment-894235901">Details</a></li> 
             <li>Participated in the <b>Code Review</b> process of a PR by a developer which features a stdio hijack implementation on top of <i>fopencookie</i>. <a href="https://github.com/direct-code-execution/ns-3-dce/pull/128"><u>PR #128</u></a></li>
             <li>Suggested fixes and a <i>execve</i> based edge case where the FILE stream was getting popped off the streams stack and no log was being flushed to the files</li>            
