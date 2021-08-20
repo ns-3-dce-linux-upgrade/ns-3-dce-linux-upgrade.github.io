@@ -72,7 +72,7 @@
                                     httpd, etc, to work on DCE on top of Linux-5.10. I could also get ethtool to work on top of it, and tested device statistics generation
                                     and some RX/TX device configurational operations. ethtool is still a work in progress. I also patched and fixed issues with the sysctl Setup,
                                     PID namespace, task_struct lookups in kernel initialization phase. I also patched kernel components like the kernel LSM (Linux Security Module),
-                                    ucounts kernel API, and VFS mount etc. I also tested and prototyped why the previous stratergy to use LKL (Linux Kernel Library) fails due to task scheduler issues,
+                                    ucounts kernel API, and VFS mount etc. I also tested and prototyped why the previous strategy to use LKL (Linux Kernel Library) fails due to task scheduler issues,
                                     as well as limitations imposed by it's uniprocessor architecture, cpu locks and semaphore usage. I summarized my progress regarding the same on the developer lists.</p>
 
     <p style="text-align:justify">Please read through my design documentation that I maintained during the GSoC program !</p> 
@@ -151,7 +151,7 @@
                                                         Implemented the --apiscan feature for DCE, which is unimodular in nature and compiles to a standalone project 
                                                         with dependencies on ns-3 libraries as a whole, as compared to ns-3 which is a 
                                                         combination of multiple modules having individually defined dependencies.<br>
-                                                        The processes uses a combination of PyBindGen and castXML</p>
+                                                        The processes uses a combination of PyBindGen and CastXML</p>
         </div>
         <div class="col s4 center">              
             <p class="light" style="text-align:center">Fixed the failing CircleCI used in ns-3-dce.<br>
@@ -210,7 +210,7 @@
             <li>Attempted to resolve a couple of issues on the <b>ns-3 official Google Group</b></li>
             <li>Commit for adding <i>configure_arguments</i> attribute usage in <i>depends_on</i> tag itself, and fixing dependency lookups in Bake. 
               The commits were <b>Merged</b> in the Bake Repo. <a href="https://gitlab.com/nsnam/bake/-/commit/041372d9e4ee18383206ec4234f3b6656b3b7aa0"><u>Bake Commit</u></a>            
-            <li><b>Learnt</b> some really great debugging skills while my mentor resolved the bug in <i>dce-umip-nemo.cc</i></li>
+            <li><b>Learned</b> some really great debugging skills while my mentor resolved the bug in <i>dce-umip-nemo.cc</i></li>
             <li>Collaborated with my mentor on resolving a <a href="https://github.com/direct-code-execution/ns-3-dce/issues/122"><u>bug</u></a> with LTE scripts reported by a user.</li>
             <li>Implemented (testing is yet to be done) <b>ethtool</b> on top of Linux-5.10.47 ported kernel library, to facilitate netdevice statistics and user-defined device configurations. <a href="https://github.com/ParthPratim/ns-3-dce/tree/linux-5.10.47-ethtool"><u>Code</u></a></li>
             <li><b>Debugged</b> the <i>dce-iperf.cc</i> script, and documented technical reasons and point of failure in the code. <a href="https://github.com/direct-code-execution/ns-3-dce/issues/125#issuecomment-894235901">Details</a></li> 
